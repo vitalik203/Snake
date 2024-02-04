@@ -1,0 +1,16 @@
+.field{
+    display: grid;
+    grid-template-columns: repeat(20, 30px); 
+    grid-template-rows: repeat(20, 30px); 
+    border: 1px solid #000; 
+    width: 600px;
+    height: 600px;
+    margin: 0 auto;
+}
+
+.field div{
+    width: 30px;
+    height: 30px;
+    border: 1px solid #ccc;
+    box-sizing: border-box;
+}
