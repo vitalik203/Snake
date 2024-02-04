@@ -27,13 +27,13 @@ let dir;
 document.addEventListener("keydown", direction)
 
 function direction(e){
-    if(e.keyCode==38 && e.keyCode!=40){
+    if(e.keyCode==38 && dir!="down"){
         dir = "up"
-    }else if(e.keyCode==39 && e.keyCode!=37){
+    }else if(e.keyCode==39 && dir!="left"){
         dir = "right"
-    }else if(e.keyCode==40 && e.keyCode!=38){
+    }else if(e.keyCode==40 && dir!="up"){
         dir = "down"
-    }else if(e.keyCode==37 && e.keyCode!=39){
+    }else if(e.keyCode==37 && dir!="right"){
         dir = "left"
     }
 }
@@ -41,9 +41,20 @@ function direction(e){
 let score = 0
 
 function drawGame(){
+    const snakeHead = {
+        x: snakeArr[0].x,
+        y: snakeArr[0].y
+    }
     context.drawImage(fieldImg, 0, 0)
+    if(snakeArr[0].x==food.x && snakeArr[0].y==food.y){
+        food = {
+            x: Math.floor((Math.random()*17)+1)*box,
+            y: Math.floor((Math.random()*15)+3)*box
+        }
+        score++
+        snakeArr.unshift(snakeHead)
+    }
     
-
     for(let i=0; i<snakeArr.length; i++){
         context.fillStyle = i==0?"green":"red"
         context.fillRect(snakeArr[i].x, snakeArr[i].y, box, box)
@@ -58,34 +69,37 @@ function drawGame(){
     if(dir=="up") snakeArr[0].y-=box
     if(dir=="down") snakeArr[0].y+=box
 
-
-
-    if(snakeArr[0].x==food.x && snakeArr[0].y==food.y){
-        food = {
-            x: Math.floor((Math.random()*17)+1)*box,
-            y: Math.floor((Math.random()*15)+3)*box
-        }
-        score++
-    }
-
     
-    if(snakeArr<(1*box)||snakeArr>(17*box)||snakeArr<(2*box)||snakeArr>(16*box)){
+
+    if(snakeArr[0].x==-1*box){
+        // snakeArr[0].x=17*box
+        clearInterval(game)
+    }else if(snakeArr[0].x==19*box){
+        // snakeArr[0].x=1*box
+        clearInterval(game)
+    }else if(snakeArr[0].y==1*box){
+        // snakeArr[0].y=15*box
+        clearInterval(game)
+    }else if(snakeArr[0].y==19*box){
+        // snakeArr[0].y=3*box
         clearInterval(game)
     }
 
-    const snakeHead = {
-        x: snakeArr[0]*box,
-        y: snakeArr[0]*box
-    }
+    
+    
+
+    
 
     let scoreXY = {
-        x: 1.5*box,
-        y: 5*box
+        x: 2.5*box,
+        y: 1.7*box
     }
 
     context.fillStyle = "white"
     context.font = "50px Arial"
-    context.fillText(score, score, scoreXY.x, scoreXY.y)
+    context.fillText(score, scoreXY.x, scoreXY.y)
+
+    
 }
  
 
