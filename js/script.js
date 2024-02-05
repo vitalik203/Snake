@@ -14,14 +14,6 @@ let food = {
     y: Math.floor((Math.random()*15)+3)*box
 }
 
-const snakeArr = []
-
-snakeArr[0]={
-    x: box*9,
-    y: box*10
-}
-
-
 let dir;
 
 document.addEventListener("keydown", direction)
@@ -38,38 +30,52 @@ function direction(e){
     }
 }
 
+const snakeArr = []
+snakeArr[0]={
+    x: box*9,
+    y: box*10
+}
+
 let score = 0
 
+
+function eatTail(head, arr){
+    for(let j=0; j<arr.length; j++){
+        if(head.x===arr[j].x&&head.y===arr[j].y){
+            clearInterval(game)
+            break
+        }
+    }
+}
+
 function drawGame(){
-    const snakeHead = {
+    context.drawImage(fieldImg, 0, 0)
+    
+    if(food.x!=snakeArr[0].x && food.y!=snakeArr[0].y){
+        context.drawImage(foodImg, food.x, food.y)
+    }
+
+    for(let i=0; i<snakeArr.length; i++){
+        context.fillStyle = i==0?"green":"red"
+        context.fillRect(snakeArr[i].x, snakeArr[i].y, box, box)
+    }
+    const newHead = {
         x: snakeArr[0].x,
         y: snakeArr[0].y
     }
-    context.drawImage(fieldImg, 0, 0)
+    snakeArr.unshift(newHead)
     if(snakeArr[0].x==food.x && snakeArr[0].y==food.y){
         food = {
             x: Math.floor((Math.random()*17)+1)*box,
             y: Math.floor((Math.random()*15)+3)*box
         }
         score++
-        snakeArr.unshift(snakeHead)
-    }
-    
-    for(let i=0; i<snakeArr.length; i++){
-        context.fillStyle = i==0?"green":"red"
-        context.fillRect(snakeArr[i].x, snakeArr[i].y, box, box)
-    }
-
-    if(food.x!=snakeArr.y && food.y!=snakeArr.y){
-        context.drawImage(foodImg, food.x, food.y)
-    }
-
+    }else {snakeArr.pop()}
+   
     if(dir=="left") snakeArr[0].x-=box
     if(dir=="right") snakeArr[0].x+=box
     if(dir=="up") snakeArr[0].y-=box
     if(dir=="down") snakeArr[0].y+=box
-
-    
 
     if(snakeArr[0].x==-1*box){
         // snakeArr[0].x=17*box
@@ -85,11 +91,6 @@ function drawGame(){
         clearInterval(game)
     }
 
-    
-    
-
-    
-
     let scoreXY = {
         x: 2.5*box,
         y: 1.7*box
@@ -98,8 +99,8 @@ function drawGame(){
     context.fillStyle = "white"
     context.font = "50px Arial"
     context.fillText(score, scoreXY.x, scoreXY.y)
-
     
+    // eatTail(newHead, snakeArr)
 }
  
 
